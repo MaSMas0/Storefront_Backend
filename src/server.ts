@@ -1,8 +1,13 @@
 import express, { Request, Response } from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 const app = express();
-const port = 2784;
+const port = process.env.PORT || 2784;
+
 app.use(bodyParser.json());
 app.use(morgan('tiny')); //Add in logging to record when images are processed or accessed.
 
@@ -17,3 +22,5 @@ app.use((_req: Request, res: Response): void => {
 app.listen(port, () => {
   console.log(`server is up and running :D on port ${port}`);
 });
+
+export default app;

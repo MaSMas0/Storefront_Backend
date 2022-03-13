@@ -6,7 +6,7 @@ dotenv.config();
 const {
   POSTGRES_HOST,
   POSTGRES_DB,
-  POSTGRES_DB_TEST,
+  POSTGRES_TEST_DB,
   POSTGRES_USER,
   POSTGRES_PASSWORD,
   POSTGRES_PORT,
@@ -15,7 +15,7 @@ const {
 
 const client = new Pool({
   host: POSTGRES_HOST,
-  database: ENV === 'dev' ? POSTGRES_DB : POSTGRES_DB_TEST,
+  database: ENV === 'dev' ? POSTGRES_DB : POSTGRES_TEST_DB,
   user: POSTGRES_USER,
   password: POSTGRES_PASSWORD,
   port: parseInt(POSTGRES_PORT as string, 10)

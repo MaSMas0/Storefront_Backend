@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess \"node ./dist/server.js\"",
-    "test": "ENV=test db-migrate --env test up && jasmine-ts && db-migrate db:drop test",
+    "test": "ENV=test db-migrate --env test up && npm run testing && db-migrate db:drop test",
+    "testing": "npm run build && npm run jasmine",
+    "jasmine": "jasmine",
     "tsc": "tsc",
     "build": "npx tsc",
     "start": "nodemon src/server.ts",
