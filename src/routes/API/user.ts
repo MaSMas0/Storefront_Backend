@@ -3,6 +3,6 @@ import { create } from '../../handlers/user';
 
 const routes = Router();
 
-routes.post('/', create);
+routes.post('/create', create);
 
 export default routes;
