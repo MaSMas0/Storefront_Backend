@@ -5,7 +5,7 @@ import app from '../../server';
 
 const request = Request(app);
 const user = new UserOperation();
-describe('Test CRUD API HTTP Operations', () => {
+describe('Test CRUD API HTTP Operations for user model', () => {
   const u = {
     username: 'armin',
     email: 'armin@eldia.com',

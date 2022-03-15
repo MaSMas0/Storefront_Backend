@@ -5,5 +5,5 @@ CREATE TABLE books (
     author VARCHAR(255),
     type VARCHAR(100),
     summary text,
-    price integer NOT NULL
+    price integer
 );

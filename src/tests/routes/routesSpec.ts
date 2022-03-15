@@ -9,3 +9,9 @@ describe('users EndPoint response', () => {
     expect(response.status).toBe(200);
   });
 });
+describe('books EndPoint response', () => {
+  it('get the response for "/books" path', async () => {
+    const response = await request.get('/api/books');
+    expect(response.status).toBe(200);
+  });
+});
