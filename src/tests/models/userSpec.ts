@@ -39,11 +39,61 @@ describe('user Model tests', () => {
       });
     });
   });
-  describe('user.Delete tests', () => {
+
+  describe('user.update tests', () => {
+    it('should have a user.update method', () => {
+      expect(user.update).toBeDefined();
+    });
+    it('user.update method should update user info', async () => {
+      const updated = await user.update({
+        id: 1,
+        username: 'bertholdt',
+        email: 'bert@merlya.com',
+        password_digest: 'annie'
+      });
+
+      expect(updated.id).toEqual(u.id);
+      expect(updated.username).toEqual('bertholdt');
+      expect(updated.email).toEqual('bert@merlya.com');
+      expect(updated.password_digest).toEqual('annie');
+    });
+  });
+  describe('user.index tests', () => {
+    it('should have a user.index method', () => {
+      expect(user.index).toBeDefined();
+    });
+    it('index method should return a list of users', async () => {
+      const result = await user.index();
+      expect(result).toEqual([
+        {
+          id: 2,
+          username: 'batman',
+          email: 'batman@brucewane.com'
+        },
+        {
+          id: 1,
+          username: 'bertholdt',
+          email: 'bert@merlya.com'
+        }
+      ]);
+    });
+  });
+  describe('user.show tests', () => {
+    it('should have a user.show method', () => {
+      expect(user.show).toBeDefined();
+    });
+    it('user.show method should a specific user according to the id provided', async () => {
+      const result = await user.show(1);
+      expect(result.id).toBe(1);
+      expect(result.username).toBe('bertholdt');
+      expect(result.email).toBe('bert@merlya.com');
+    });
+  });
+  describe('user.delete tests', () => {
     it('should have a user.delete method', () => {
       expect(user.delete).toBeDefined();
     });
-    it('user.Delete method should delete a user', async () => {
+    it('user.delete method should delete a user', async () => {
       const del = await user.delete(u.id as number);
       expect(del.id).toEqual(u.id);
     });
