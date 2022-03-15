@@ -17,5 +17,14 @@ const create = async (req: Request, res: Response) => {
     res.json(error);
   }
 };
+const destroy = async (req: Request, res: Response) => {
+  try {
+    const deleted = await u_Operation.delete(req.body.id);
+    res.json(deleted);
+  } catch (error) {
+    res.status(400);
+    res.json(error);
+  }
+};
 
-export { create };
+export { create, destroy };

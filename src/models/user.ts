@@ -26,4 +26,18 @@ export class UserOperation {
       );
     }
   }
+  async delete(id: number): Promise<User> {
+    try {
+      const conn = await client.connect();
+      const sql =
+        'DELETE FROM users WHERE id = $1 RETURNING id, username, email';
+      const result = await conn.query(sql, [id]);
+      conn.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(
+        `can't Delete the user number (${id}) due to Error: ${error}`
+      );
+    }
+  }
 }

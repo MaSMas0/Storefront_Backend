@@ -9,3 +9,10 @@ describe('users create EndPoint response', () => {
     expect(response.status).toBe(200);
   });
 });
+
+describe('users delete EndPoint response', () => {
+  it('get the response for "/users/create" path', async () => {
+    const response = await request.delete('/api/users/delete');
+    expect(response.status).toBe(200);
+  });
+});
