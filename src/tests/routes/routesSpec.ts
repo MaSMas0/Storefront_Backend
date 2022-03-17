@@ -15,3 +15,9 @@ describe('books EndPoint response', () => {
     expect(response.status).toBe(200);
   });
 });
+describe('orders EndPoint response', () => {
+  it('get the response for "/orders" path', async () => {
+    const response = await request.get('/api/orders');
+    expect(response.status).toBe(200);
+  });
+});

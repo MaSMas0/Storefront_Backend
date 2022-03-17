@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import userRoutes from './API/user';
 import bookRoutes from './API/book';
+import orderRoutes from './API/order';
 const routes = Router();
 
 routes.use('/users', userRoutes);
@@ -11,6 +12,10 @@ routes.get('/users', (_req: Request, res: Response) => {
 routes.use('/books', bookRoutes);
 routes.get('/books', (_req: Request, res: Response) => {
   res.send('Bookstore (Create,Delete,Update,Index,Show)');
+});
+routes.use('/orders', orderRoutes);
+routes.get('/orders', (_req: Request, res: Response) => {
+  res.send('orders list operations (Create,Delete,Update,Index,Show)');
 });
 
 export default routes;
