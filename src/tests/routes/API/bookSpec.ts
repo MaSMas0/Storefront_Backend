@@ -8,7 +8,7 @@ describe('book model EndPoints response', () => {
   afterAll(async () => {
     const connection = await client.connect();
     const sql =
-      'DELETE FROM books; \n ALTER SEQUENCE books_id_seq RESTART WITH 1;';
+      'DELETE FROM books;\nALTER SEQUENCE books_id_seq RESTART WITH 1';
     await connection.query(sql);
     connection.release();
   });

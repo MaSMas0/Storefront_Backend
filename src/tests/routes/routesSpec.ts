@@ -21,3 +21,16 @@ describe('orders EndPoint response', () => {
     expect(response.status).toBe(200);
   });
 });
+
+describe('Dashboard EndPoint response', () => {
+  it('get the response for "/dashboard" path', async () => {
+    const response = await request.get('/api/dashboard');
+    expect(response.status).toBe(200);
+  });
+});
+describe('order_books EndPoint response', () => {
+  it('get the response for "/orderbooks" path', async () => {
+    const response = await request.get('/api/orderbooks');
+    expect(response.status).toBe(200);
+  });
+});

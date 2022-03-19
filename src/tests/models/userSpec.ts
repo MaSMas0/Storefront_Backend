@@ -16,7 +16,7 @@ describe('user Model tests', () => {
   afterAll(async () => {
     const conn = await client.connect();
     const sql =
-      'DELETE FROM users; \n ALTER SEQUENCE users_id_seq RESTART WITH 1;';
+      'DELETE FROM users;\nALTER SEQUENCE users_id_seq RESTART WITH 1';
     await conn.query(sql);
     conn.release();
   });

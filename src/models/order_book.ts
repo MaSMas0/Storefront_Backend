@@ -7,7 +7,12 @@ export type OrderBook = {
   book_id: string;
   quantity: number;
 };
-
+export type OrderShow = {
+  order_id?: string;
+  book_id: string;
+  quantity: number;
+  title: string;
+};
 export class BookOrder {
   async addBook(bo: OrderBook): Promise<OrderBook> {
     // get order to see if it is open first before inserting any new products
@@ -65,7 +70,7 @@ export class BookOrder {
     }
   }
 
-  async show(book_id: string): Promise<OrderBook[]> {
+  async show(book_id: string): Promise<OrderShow[]> {
     try {
       const conn = await client.connect();
       const sql =
@@ -100,7 +105,7 @@ export class BookOrder {
     }
   }
 
-  async delete(order_id: number, book_id: number): Promise<OrderBook> {
+  async delete(order_id: string, book_id: string): Promise<OrderBook> {
     try {
       const conn = await client.connect();
       const sql =

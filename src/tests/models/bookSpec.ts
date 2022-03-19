@@ -20,7 +20,7 @@ describe('book Model tests', () => {
   afterAll(async () => {
     const conn = await client.connect();
     const sql =
-      'DELETE FROM books; \n ALTER SEQUENCE books_id_seq RESTART WITH 1;';
+      'DELETE FROM books;\nALTER SEQUENCE books_id_seq RESTART WITH 1';
     await conn.query(sql);
     conn.release();
   });

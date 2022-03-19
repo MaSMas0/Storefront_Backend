@@ -30,7 +30,7 @@ describe('order Model tests', () => {
   afterAll(async () => {
     const conn = await client.connect();
     const sql =
-      'DELETE FROM orders; \n DELETE FROM users;\n ALTER SEQUENCE orders_id_seq RESTART WITH 1;\n ALTER SEQUENCE users_id_seq RESTART WITH 1;';
+      'DELETE FROM orders;\nALTER SEQUENCE orders_id_seq RESTART WITH 1;\nDELETE FROM users;\nALTER SEQUENCE users_id_seq RESTART WITH 1';
     await conn.query(sql);
     conn.release();
   });
