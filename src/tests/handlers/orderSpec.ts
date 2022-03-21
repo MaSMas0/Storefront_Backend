@@ -1,5 +1,5 @@
 import Request from 'supertest';
-import client from '../../database';
+import { client } from '../../database';
 import { Order, OrderList } from '../../models/order';
 import { User, UserOperation } from '../../models/user';
 import app from '../../server';

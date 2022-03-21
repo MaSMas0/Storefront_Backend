@@ -8,14 +8,19 @@ import {
   five_Most_Expensive_Books,
   getFiveMostPopularBooks
 } from '../../handlers/dashboard';
+import { BearerTokenVerification } from '../../middlewares/authentication';
 
 const routes = Router();
 
-routes.get('/usersorders', users_With_Orders);
-routes.get('/closedorders/:id', user_Closed_Orders);
-routes.get('/openorders/:id', user_Open_Orders);
-routes.get('/booksorders', books_In_Orders);
-routes.get('/bookscategory', books_Category);
-routes.get('/mostexpensive', five_Most_Expensive_Books);
-routes.get('/mostPopular', getFiveMostPopularBooks);
+routes.get('/usersorders', BearerTokenVerification, users_With_Orders);
+routes.get('/closedorders/:id', BearerTokenVerification, user_Closed_Orders);
+routes.get('/openorders/:id', BearerTokenVerification, user_Open_Orders);
+routes.get('/booksorders', BearerTokenVerification, books_In_Orders);
+routes.get('/bookscategory', BearerTokenVerification, books_Category);
+routes.get(
+  '/mostexpensive',
+  BearerTokenVerification,
+  five_Most_Expensive_Books
+);
+routes.get('/mostPopular', BearerTokenVerification, getFiveMostPopularBooks);
 export default routes;

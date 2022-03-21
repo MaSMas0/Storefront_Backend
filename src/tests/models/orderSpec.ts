@@ -1,4 +1,4 @@
-import client from '../../database';
+import { client } from '../../database';
 import { OrderList, Order } from '../../models/order';
 import { User, UserOperation } from '../../models/user';
 

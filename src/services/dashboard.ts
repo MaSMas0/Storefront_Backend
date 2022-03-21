@@ -1,4 +1,4 @@
-import client from '../database';
+import { client } from '../database';
 import { Order } from '../models/order';
 export class DashboardQueries {
   // Get all users that have made orders

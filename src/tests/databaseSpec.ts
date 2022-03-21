@@ -1,4 +1,4 @@
-import client from '../database';
+import { client } from '../database';
 
 describe('connection to database', () => {
   it('checks that API connected successfully to database', async () => {

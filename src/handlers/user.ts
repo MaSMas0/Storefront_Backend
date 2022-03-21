@@ -1,17 +1,16 @@
 import { Request, Response } from 'express';
 import { User, UserOperation } from '../models/user';
+import jwt from 'jsonwebtoken';
+import { TOKEN_SECRET } from '../database';
 
 const u_Operation = new UserOperation();
 
 const create = async (req: Request, res: Response) => {
   try {
-    const user: User = {
-      username: req.body.username,
-      email: req.body.email,
-      password_digest: req.body.password_digest
-    };
+    const user: User = req.body;
     const newUser = await u_Operation.create(user);
-    res.json(newUser);
+    const token = jwt.sign({ user: newUser }, TOKEN_SECRET as string);
+    res.json({ userData: newUser, Token: token });
   } catch (error) {
     res.status(400);
     res.json(error);
@@ -63,5 +62,21 @@ const update = async (req: Request, res: Response) => {
     res.json(error);
   }
 };
+const authenticate = async (req: Request, res: Response) => {
+  const user = {
+    email: req.body.email as string,
+    password_digest: req.body.password_digest as string
+  };
+  try {
+    const u = await u_Operation.authenticate(user.email, user.password_digest);
+    const token = jwt.sign({ u }, TOKEN_SECRET as string);
+    res.json({ ...u, token });
+  } catch (error) {
+    res.status(401);
+    res.json({
+      error: `either username or password has been put wrong please try again `
+    });
+  }
+};
 
-export { create, destroy, index, show, update };
+export { create, destroy, index, show, update, authenticate };

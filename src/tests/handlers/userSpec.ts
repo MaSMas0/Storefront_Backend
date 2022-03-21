@@ -1,5 +1,5 @@
 import Request from 'supertest';
-import client from '../../database';
+import { client } from '../../database';
 import { User, UserOperation } from '../../models/user';
 import app from '../../server';
 
@@ -32,9 +32,9 @@ describe('Test CRUD API HTTP Operations for user model', () => {
         password_digest: 'rumbling'
       } as User);
     expect(res.status).toBe(200);
-    expect(res.body.username).toBe('eren yeager');
-    expect(res.body.email).toBe('attacktitan@eldia.com');
-    expect(res.body.password_digest).toBe('rumbling');
+    expect(res.body.userData.username).toBe('eren yeager');
+    expect(res.body.userData.email).toBe('attacktitan@eldia.com');
+    expect(res.body.userData.password_digest).not.toBe('rumbling');
   });
 
   it('should list all users', async () => {
@@ -67,7 +67,7 @@ describe('Test CRUD API HTTP Operations for user model', () => {
     expect(res.body.id).toBe(u.id);
     expect(res.body.username).toBe('bertholdt');
     expect(res.body.email).toBe('bert@merlya.com');
-    expect(res.body.password_digest).toBe('annie');
+    expect(res.body.password_digest).not.toBe('annie');
   });
 
   it('should show a specific user according to its id', async () => {

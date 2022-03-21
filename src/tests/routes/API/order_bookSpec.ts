@@ -1,5 +1,5 @@
 import Request from 'supertest';
-import client from '../../../database';
+import { client } from '../../../database';
 import app from '../../../server';
 // testing users endpoints
 const request = Request(app);

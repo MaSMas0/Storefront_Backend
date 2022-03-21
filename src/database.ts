@@ -10,7 +10,10 @@ const {
   POSTGRES_USER,
   POSTGRES_PASSWORD,
   POSTGRES_PORT,
-  ENV
+  ENV,
+  BCRYPT_PASSWORD,
+  SALT_ROUNDS,
+  TOKEN_SECRET
 } = process.env;
 
 const client = new Pool({
@@ -20,4 +23,4 @@ const client = new Pool({
   password: POSTGRES_PASSWORD,
   port: parseInt(POSTGRES_PORT as string, 10)
 });
-export default client;
+export { client, BCRYPT_PASSWORD as pepper, SALT_ROUNDS, TOKEN_SECRET };

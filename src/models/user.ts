@@ -1,4 +1,5 @@
-import client from '../database';
+import { client, pepper, SALT_ROUNDS } from '../database';
+import bcrypt from 'bcrypt';
 
 export type User = {
   id?: number;
@@ -7,6 +8,10 @@ export type User = {
   password_digest: string;
 };
 type UserProtect = Omit<User, 'password_digest'>;
+
+const EncryptedPassword = (pass: string): string => {
+  return bcrypt.hashSync(pass + pepper, parseInt(SALT_ROUNDS as string));
+};
 export class UserOperation {
   async create(u: User): Promise<User> {
     try {
@@ -16,7 +21,7 @@ export class UserOperation {
       const result = await conn.query(sql, [
         u.username,
         u.email,
-        u.password_digest
+        EncryptedPassword(u.password_digest as string)
       ]);
       conn.release();
       return result.rows[0];
@@ -72,7 +77,7 @@ export class UserOperation {
       const result = await conn.query(sql, [
         u.username,
         u.email,
-        u.password_digest,
+        EncryptedPassword(u.password_digest as string),
         u.id
       ]);
       conn.release();
@@ -80,6 +85,35 @@ export class UserOperation {
     } catch (error) {
       throw new Error(
         `Could not update data for user id number ${u.id} due to Error: ${error}`
+      );
+    }
+  }
+  async authenticate(email: string, password: string): Promise<User | null> {
+    try {
+      const conn = await client.connect();
+      const sql = 'SELECT password_digest FROM users WHERE email =$1';
+      const result = await conn.query(sql, [email]);
+
+      if (!result.rows.length) {
+        throw new Error(
+          `either username or password has been put wrong please try again`
+        );
+      } else {
+        const user = result.rows[0];
+        if (!bcrypt.compareSync(password + pepper, user.password_digest)) {
+          throw new Error(
+            `either username or password has been put wrong please try again`
+          );
+        } else {
+          const sql_User = 'SELECT * FROM users WHERE email =$1';
+          const UserQuery = await conn.query(sql_User, [email]);
+          const UserData = UserQuery.rows[0];
+          return UserData;
+        }
+      }
+    } catch (error) {
+      throw new Error(
+        `Unable to authenticate this User due to Error  ${error}`
       );
     }
   }

@@ -1,10 +1,12 @@
 import Request from 'supertest';
-import client from '../../database';
+import { client } from '../../database';
 import { Book, BookStore } from '../../models/book';
+import { UserOperation } from '../../models/user';
 import app from '../../server';
 
 const request = Request(app);
 const book = new BookStore();
+const user = new UserOperation();
 describe('Test CRUD API HTTP Operations for Book Model', () => {
   const b = {
     title: "Harry Potter and the philsopher's stone",

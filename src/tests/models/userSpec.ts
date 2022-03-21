@@ -1,4 +1,4 @@
-import client from '../../database';
+import { client } from '../../database';
 import { UserOperation, User } from '../../models/user';
 
 const user = new UserOperation();
@@ -31,12 +31,10 @@ describe('user Model tests', () => {
         email: 'batman@brucewane.com',
         password_digest: 'gotham'
       });
-      expect(result).toEqual({
-        id: result.id,
-        username: 'batman',
-        email: 'batman@brucewane.com',
-        password_digest: 'gotham'
-      });
+      expect(result.id).toEqual(2);
+      expect(result.username).toEqual('batman');
+      expect(result.email).toEqual('batman@brucewane.com');
+      expect(result.password_digest).not.toEqual('gotham');
     });
   });
 
@@ -55,7 +53,7 @@ describe('user Model tests', () => {
       expect(updated.id).toEqual(u.id);
       expect(updated.username).toEqual('bertholdt');
       expect(updated.email).toEqual('bert@merlya.com');
-      expect(updated.password_digest).toEqual('annie');
+      expect(updated.password_digest).not.toEqual('annie');
     });
   });
   describe('user.index tests', () => {

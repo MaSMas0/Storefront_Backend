@@ -1,4 +1,4 @@
-import client from '../../database';
+import { client } from '../../database';
 import { BookStore, Book } from '../../models/book';
 
 const book = new BookStore();
