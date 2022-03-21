@@ -2,7 +2,6 @@ import Request from 'supertest';
 import { client, test_token } from '../../../database';
 import { UserOperation, User } from '../../../models/user';
 import app from '../../../server';
-// testing users endpoints
 const request = Request(app);
 const user = new UserOperation();
 // let token = '';
