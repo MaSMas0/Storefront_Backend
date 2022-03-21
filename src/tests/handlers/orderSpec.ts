@@ -7,6 +7,7 @@ import app from '../../server';
 const request = Request(app);
 const order = new OrderList();
 const user = new UserOperation();
+let token = '';
 describe('Test CRUD API HTTP Operations for user model', () => {
   const o = {
     user_id: '1',
@@ -37,10 +38,24 @@ describe('Test CRUD API HTTP Operations for user model', () => {
     await conn.query(sql);
     conn.release();
   });
+  describe('authentication for user endpoint', () => {
+    it('should be able to authenticate to get token', async () => {
+      const res = await request
+        .post('/api/users/auth')
+        .set('Content-type', 'application/json')
+        .send({
+          email: u.email,
+          password_digest: u.password_digest
+        });
+      const BearerToken = res.body.token;
+      token = BearerToken;
+    });
+  });
   it('should create new order', async () => {
     const res = await request
       .post('/api/orders/create')
       .set('Content-Type', 'Application/json')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         user_id: '1',
         status: 'closed'
@@ -52,7 +67,9 @@ describe('Test CRUD API HTTP Operations for user model', () => {
   });
 
   it('should list all orders', async () => {
-    const res = await request.get('/api/orders/index');
+    const res = await request
+      .get('/api/orders/index')
+      .set('Authorization', `Bearer ${token}`);
     expect(res.status).toBe(200);
     expect(res.body).toEqual([
       {
@@ -72,6 +89,7 @@ describe('Test CRUD API HTTP Operations for user model', () => {
     const res = await request
       .put(`/api/orders/update/${o.id}`)
       .set('Content-Type', 'Application/json')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         user_id: '2',
         status: 'closed'
@@ -83,7 +101,9 @@ describe('Test CRUD API HTTP Operations for user model', () => {
   });
 
   it('should show a specific order according to its id', async () => {
-    const res = await request.get('/api/orders/show/1');
+    const res = await request
+      .get('/api/orders/show/1')
+      .set('Authorization', `Bearer ${token}`);
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
       id: 1,
@@ -96,6 +116,7 @@ describe('Test CRUD API HTTP Operations for user model', () => {
     const res = await request
       .delete('/api/orders/delete')
       .set('Content-Type', 'Application/json')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         id: o.id
       } as unknown as Order);

@@ -1,12 +1,13 @@
 import Request from 'supertest';
-import { client } from '../../database';
+import { client, test_token } from '../../database';
 import { Book, BookStore } from '../../models/book';
-import { UserOperation } from '../../models/user';
+import { User, UserOperation } from '../../models/user';
 import app from '../../server';
 
 const request = Request(app);
 const book = new BookStore();
 const user = new UserOperation();
+// let token = '';
 describe('Test CRUD API HTTP Operations for Book Model', () => {
   const b = {
     title: "Harry Potter and the philsopher's stone",
@@ -17,14 +18,38 @@ describe('Test CRUD API HTTP Operations for Book Model', () => {
       'Harry Potter, a young wizard who discovers his magical heritage on his eleventh birthday, when he receives a letter of acceptance to Hogwarts School of Witchcraft and Wizardry',
     price: 12
   } as Book;
+  const u = {
+    username: 'armin',
+    email: 'armin@eldia.com',
+    password_digest: 'annie'
+  } as User;
+  /*
+  xdescribe('authentication for user endpoint', () => {
+    it('should be able to authenticate to get token', async () => {
+      const res = await request
+        .post('/api/users/auth')
+        .set('Content-type', 'application/json')
+        .send({
+          email: u.email,
+          password_digest: u.password_digest
+        });
+      const BearerToken = res.body.token;
+      token = BearerToken;
+      expect(res.status).toBe(200);
+    });
+  }); */
+  // i couldnt keep the same method because most likely the http request is blocking so the tests
+  // are blocking also so i made a test token just for the sake of the test
   beforeAll(async () => {
     const bookCreation = await book.create(b);
     b.id = bookCreation.id;
+    const userCreation = await user.create(u);
+    u.id = userCreation.id;
   });
   afterAll(async () => {
     const connection = await client.connect();
     const sql =
-      'DELETE FROM books;\nALTER SEQUENCE books_id_seq RESTART WITH 1';
+      'DELETE FROM users;\nALTER SEQUENCE users_id_seq RESTART WITH 1;\nDELETE FROM books;\nALTER SEQUENCE books_id_seq RESTART WITH 1';
     await connection.query(sql);
     connection.release();
   });
@@ -32,6 +57,7 @@ describe('Test CRUD API HTTP Operations for Book Model', () => {
     const res = await request
       .post('/api/books/create')
       .set('Content-Type', 'Application/json')
+      .set('Authorization', `${test_token}`)
       .send({
         title: '3 men in a boat',
         total_pages: 223,
@@ -78,6 +104,7 @@ describe('Test CRUD API HTTP Operations for Book Model', () => {
     const res = await request
       .put(`/api/books/update/${b.id}`)
       .set('Content-Type', 'Application/json')
+      .set('Authorization', `${test_token}`)
       .send({
         title: 'oliver twist',
         total_pages: 608,
@@ -109,6 +136,7 @@ describe('Test CRUD API HTTP Operations for Book Model', () => {
     const res = await request
       .delete('/api/books/delete')
       .set('Content-Type', 'Application/json')
+      .set('Authorization', `${test_token}`)
       .send({
         id: b.id
       } as unknown as Book);

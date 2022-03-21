@@ -11,6 +11,7 @@ const order = new OrderList();
 const user = new UserOperation();
 const book = new BookStore();
 const book_order = new BookOrder();
+let token = '';
 describe('Test CRUD API HTTP Operations for order_book model', () => {
   const o = {
     user_id: '1',
@@ -57,6 +58,19 @@ describe('Test CRUD API HTTP Operations for order_book model', () => {
     book_id: '1',
     quantity: 7
   } as unknown as OrderBook;
+  describe('authentication for user endpoint', () => {
+    it('should be able to authenticate to get token', async () => {
+      const res = await request
+        .post('/api/users/auth')
+        .set('Content-type', 'application/json')
+        .send({
+          email: u.email,
+          password_digest: u.password_digest
+        });
+      const BearerToken = res.body.token;
+      token = BearerToken;
+    });
+  });
   beforeAll(async () => {
     const userCreation = await user.create(u);
     u.id = userCreation.id;
@@ -86,6 +100,7 @@ describe('Test CRUD API HTTP Operations for order_book model', () => {
     const res = await request
       .post('/api/orderbooks/addbook')
       .set('Content-Type', 'Application/json')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         quantity: 9,
         order_id: '2',
@@ -102,6 +117,7 @@ describe('Test CRUD API HTTP Operations for order_book model', () => {
     const res = await request
       .post('/api/orderbooks/addbook')
       .set('Content-Type', 'Application/json')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         quantity: 9,
         order_id: '3',
@@ -111,7 +127,9 @@ describe('Test CRUD API HTTP Operations for order_book model', () => {
   });
 
   it('should list all books in orders', async () => {
-    const res = await request.get('/api/orderbooks/index');
+    const res = await request
+      .get('/api/orderbooks/index')
+      .set('Authorization', `Bearer ${token}`);
     expect(res.status).toBe(200);
     expect(res.body).toEqual([
       {
@@ -133,6 +151,7 @@ describe('Test CRUD API HTTP Operations for order_book model', () => {
     const res = await request
       .put(`/api/orderbooks/update/2}`)
       .set('Content-Type', 'Application/json')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         order_id: '2',
         book_id: '1',
@@ -146,7 +165,9 @@ describe('Test CRUD API HTTP Operations for order_book model', () => {
   });
 
   it('should show a specific book in all orders according to its id', async () => {
-    const res = await request.get('/api/orderbooks/show/1');
+    const res = await request
+      .get('/api/orderbooks/show/1')
+      .set('Authorization', `Bearer ${token}`);
     expect(res.status).toBe(200);
     expect(res.body).toEqual([
       {
@@ -168,6 +189,7 @@ describe('Test CRUD API HTTP Operations for order_book model', () => {
     const res = await request
       .delete('/api/orderbooks/delete')
       .set('Content-Type', 'Application/json')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         order_id: '2',
         book_id: '1'

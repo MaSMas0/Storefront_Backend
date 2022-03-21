@@ -11,7 +11,7 @@ const order = new OrderList();
 const user = new UserOperation();
 const book = new BookStore();
 const book_order = new BookOrder();
-
+let token = '';
 describe('dashboard service HTTP Operations tests', () => {
   const o = {
     user_id: '1',
@@ -193,6 +193,19 @@ describe('dashboard service HTTP Operations tests', () => {
     book_id: '2',
     quantity: 12
   } as OrderBook;
+  describe('authentication for user endpoint', () => {
+    it('should be able to authenticate to get token', async () => {
+      const res = await request
+        .post('/api/users/auth')
+        .set('Content-type', 'application/json')
+        .send({
+          email: u.email,
+          password_digest: u.password_digest
+        });
+      const BearerToken = res.body.token;
+      token = BearerToken;
+    });
+  });
   beforeAll(async () => {
     const userCreation = await user.create(u);
     u.id = userCreation.id;
@@ -272,7 +285,9 @@ describe('dashboard service HTTP Operations tests', () => {
   });
 
   it('get all users that made orders', async () => {
-    const res = await request.get('/api/dashboard/usersorders');
+    const res = await request
+      .get('/api/dashboard/usersorders')
+      .set('Authorization', `Bearer ${token}`);
     expect(res.status).toBe(200);
     expect(res.body).toEqual([
       {
@@ -339,7 +354,9 @@ describe('dashboard service HTTP Operations tests', () => {
   });
 
   it('userClosedOrders tests', async () => {
-    const res = await request.get('/api/dashboard/closedorders/1');
+    const res = await request
+      .get('/api/dashboard/closedorders/1')
+      .set('Authorization', `Bearer ${token}`);
     expect(res.status).toBe(200);
     expect(res.body).toEqual([
       {
@@ -356,7 +373,9 @@ describe('dashboard service HTTP Operations tests', () => {
   });
 
   it('userOpenOrders tests', async () => {
-    const res = await request.get('/api/dashboard/openorders/1');
+    const res = await request
+      .get('/api/dashboard/openorders/1')
+      .set('Authorization', `Bearer ${token}`);
     expect(res.status).toBe(200);
     expect(res.body).toEqual([
       {
@@ -376,6 +395,7 @@ describe('dashboard service HTTP Operations tests', () => {
     const res = await request
       .get('/api/dashboard/bookscategory')
       .set('Content-Type', 'Application/json')
+      .set('Authorization', `Bearer ${token}`)
       .send({ type: 'fantasy' });
 
     expect(res.status).toBe(200);
@@ -398,7 +418,9 @@ describe('dashboard service HTTP Operations tests', () => {
     ]);
   });
   it('get all books in order', async () => {
-    const res = await request.get('/api/dashboard/booksorders');
+    const res = await request
+      .get('/api/dashboard/booksorders')
+      .set('Authorization', `Bearer ${token}`);
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual([
@@ -465,7 +487,9 @@ describe('dashboard service HTTP Operations tests', () => {
     ]);
   });
   it('get the 5 most expensive books from the store', async () => {
-    const res = await request.get('/api/dashboard/mostexpensive');
+    const res = await request
+      .get('/api/dashboard/mostexpensive')
+      .set('Authorization', `Bearer ${token}`);
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual([
@@ -492,7 +516,9 @@ describe('dashboard service HTTP Operations tests', () => {
     ]);
   });
   it('get the 5 most popular books from the store', async () => {
-    const res = await request.get('/api/dashboard/mostPopular');
+    const res = await request
+      .get('/api/dashboard/mostPopular')
+      .set('Authorization', `Bearer ${token}`);
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual([

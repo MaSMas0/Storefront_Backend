@@ -5,6 +5,7 @@ import app from '../../server';
 
 const request = Request(app);
 const user = new UserOperation();
+let token = '';
 describe('Test CRUD API HTTP Operations for user model', () => {
   const u = {
     username: 'armin',
@@ -22,6 +23,33 @@ describe('Test CRUD API HTTP Operations for user model', () => {
     await connection.query(sql);
     connection.release();
   });
+  describe('authentication', () => {
+    it('should authenticate a user and give back a token', async () => {
+      const res = await request
+        .post('/api/users/auth')
+        .set('Content-type', 'application/json')
+        .send({
+          email: u.email,
+          password_digest: u.password_digest
+        });
+      const BearerToken = res.body.token;
+      token = BearerToken;
+      expect(res.status).toBe(200);
+      expect(res.body.id).toBe(u.id);
+      expect(res.body.email).toBe(u.email);
+    });
+
+    it('should throw an error in case of wrong email or password', async () => {
+      const res = await request
+        .post('/api/users/auth')
+        .set('Content-type', 'application/json')
+        .send({
+          email: 'amrin@amrin.co',
+          password: 'einna'
+        });
+      expect(res.status).toBe(401);
+    });
+  });
   it('should create new user', async () => {
     const res = await request
       .post('/api/users/create')
@@ -38,7 +66,9 @@ describe('Test CRUD API HTTP Operations for user model', () => {
   });
 
   it('should list all users', async () => {
-    const res = await request.get('/api/users/index');
+    const res = await request
+      .get('/api/users/index')
+      .set('Authorization', `Bearer ${token}`);
     expect(res.status).toBe(200);
     expect(res.body).toEqual([
       {
@@ -58,6 +88,7 @@ describe('Test CRUD API HTTP Operations for user model', () => {
     const res = await request
       .put(`/api/users/update/${u.id}`)
       .set('Content-Type', 'Application/json')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         username: 'bertholdt',
         email: 'bert@merlya.com',
@@ -71,7 +102,9 @@ describe('Test CRUD API HTTP Operations for user model', () => {
   });
 
   it('should show a specific user according to its id', async () => {
-    const res = await request.get('/api/users/show/1');
+    const res = await request
+      .get('/api/users/show/1')
+      .set('Authorization', `Bearer ${token}`);
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
       id: 1,
@@ -84,6 +117,7 @@ describe('Test CRUD API HTTP Operations for user model', () => {
     const res = await request
       .delete('/api/users/delete')
       .set('Content-Type', 'Application/json')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         id: u.id
       } as unknown as User);

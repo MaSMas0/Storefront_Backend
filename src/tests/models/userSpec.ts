@@ -20,6 +20,19 @@ describe('user Model tests', () => {
     await conn.query(sql);
     conn.release();
   });
+  describe('user.authenticate tests', () => {
+    it('should have a user.authenticate method', () => {
+      expect(user.authenticate).toBeDefined();
+    });
+    it('Authenticate method should return the authenticated user', async () => {
+      const authenticatedUser = await user.authenticate(
+        u.email,
+        u.password_digest as string
+      );
+      expect(authenticatedUser?.email).toBe(u.email);
+      expect(authenticatedUser?.username).toBe(u.username);
+    });
+  });
   describe('user.create tests', () => {
     it('should have a user.create method', () => {
       expect(user.create).toBeDefined();
