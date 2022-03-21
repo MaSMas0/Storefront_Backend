@@ -3,12 +3,13 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import routes from './routes/routes';
+import cors from 'cors';
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 2784;
-
+app.use(cors());
 app.use(bodyParser.json());
 app.use(morgan('tiny')); //Add in logging to record when images are processed or accessed.
 
