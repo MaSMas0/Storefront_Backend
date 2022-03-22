@@ -399,23 +399,7 @@ describe('dashboard service HTTP Operations tests', () => {
       .send({ type: 'fantasy' });
 
     expect(res.status).toBe(200);
-    expect(res.body).toEqual([
-      {
-        title: 'Alice in Wonderland',
-        author: 'Lewis Carroll',
-        price: 5
-      },
-      {
-        title: "Harry Potter and the philsopher's stone",
-        author: 'J.K. Rowling',
-        price: 14
-      },
-      {
-        title: 'harry potter and the chamber of secrets',
-        author: 'J.K. Rowling',
-        price: 12
-      }
-    ]);
+    expect(res.body.length).toEqual(3);
   });
   it('get all books in order', async () => {
     const res = await request
